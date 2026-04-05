@@ -205,7 +205,6 @@ class _BaseEncoder(TransformerMixin, BaseEstimator):
         warn_on_unknown=False,
         ignore_category_indices=None,
     ):
-        print ("X",X)
         X_list, n_samples, n_features = self._check_X(
             X, ensure_all_finite=ensure_all_finite
         )
@@ -1288,7 +1287,8 @@ class OrdinalEncoder(OneToOneFeatureMixin, _BaseEncoder):
         Categories (unique values) per feature:
 
         - 'auto' : Determine categories automatically from the training data.
-        - 'frequency' : 
+        - 'frequency' : Option for the order of the encodings to be by their
+          frequency instead of the alphabetical order
         - list : ``categories[i]`` holds the categories expected in the ith
           column. The passed categories should not mix strings and numeric
           values, and should be sorted in case of numeric values.

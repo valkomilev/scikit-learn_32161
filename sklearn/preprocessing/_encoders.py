@@ -88,7 +88,7 @@ class _BaseEncoder(TransformerMixin, BaseEstimator):
         )
         self.n_features_in_ = n_features
 
-        if self.categories != "auto":
+        if self.categories != "auto" and self.categories != 'frequency':
             if len(self.categories) != n_features:
                 raise ValueError(
                     "Shape mismatch: if categories is an array,"
@@ -98,7 +98,7 @@ class _BaseEncoder(TransformerMixin, BaseEstimator):
         self.categories_ = []
         category_counts = []
         compute_counts = return_counts or self._infrequent_enabled
-
+        X_list_dict = {}
         for i in range(n_features):
             Xi = X_list[i]
 
@@ -109,6 +109,13 @@ class _BaseEncoder(TransformerMixin, BaseEstimator):
                     category_counts.append(counts)
                 else:
                     cats = result
+            elif self.categories == "frequency":
+                for element in Xi:
+                    if hash(element) not in list(X_list_dict.keys()):
+                        X_list_dict[hash(element)] = []
+                    X_list_dict[hash(element)].append(element)
+                category_counts.append(len(X_list_dict.keys()))
+
             else:
                 if np.issubdtype(Xi.dtype, np.str_):
                     # Always convert string categories to objects to avoid
@@ -168,8 +175,8 @@ class _BaseEncoder(TransformerMixin, BaseEstimator):
                 if compute_counts:
                     category_counts.append(_get_counts(Xi, cats))
 
-            self.categories_.append(cats)
-
+                self.categories_.append(cats)
+        
         output = {"n_samples": n_samples}
         if return_counts:
             output["category_counts"] = category_counts
@@ -198,6 +205,7 @@ class _BaseEncoder(TransformerMixin, BaseEstimator):
         warn_on_unknown=False,
         ignore_category_indices=None,
     ):
+        print ("X",X)
         X_list, n_samples, n_features = self._check_X(
             X, ensure_all_finite=ensure_all_finite
         )
@@ -1280,6 +1288,7 @@ class OrdinalEncoder(OneToOneFeatureMixin, _BaseEncoder):
         Categories (unique values) per feature:
 
         - 'auto' : Determine categories automatically from the training data.
+        - 'frequency' : 
         - list : ``categories[i]`` holds the categories expected in the ith
           column. The passed categories should not mix strings and numeric
           values, and should be sorted in case of numeric values.
@@ -1439,7 +1448,7 @@ class OrdinalEncoder(OneToOneFeatureMixin, _BaseEncoder):
     """
 
     _parameter_constraints: dict = {
-        "categories": [StrOptions({"auto"}), list],
+        "categories": [StrOptions({"auto"}),StrOptions({"frequency"}), list],
         "dtype": "no_validation",  # validation delegated to numpy
         "encoded_missing_value": [Integral, type(np.nan)],
         "handle_unknown": [StrOptions({"error", "use_encoded_value"})],

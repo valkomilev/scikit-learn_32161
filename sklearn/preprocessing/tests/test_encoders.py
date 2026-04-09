@@ -767,8 +767,8 @@ def test_ordinal_encoder_inverse():
 #test bunch of ties for frequency
 # test for no ties
 #encoder  dont encode in any particular order . it has auto of alphabetical OrdinalEncoder
-#after this this encoding is feeded to the fit functions
-#we have to test if the fit is behaiving normaly with the new encoding which will be ordered. 
+#after this this encoding is fed to the fit functions
+#we have to test if the fit is behaiving normally with the new encoding which will be ordered. 
 def test_ordinal_encoder_frequency():
     enc = OrdinalEncoder(handle_unknown="use_encoded_value", unknown_value=-2)
 

@@ -88,7 +88,7 @@ class _BaseEncoder(TransformerMixin, BaseEstimator):
         )
         self.n_features_in_ = n_features
 
-        if self.categories != "auto" and self.categories != 'frequency':
+        if self.categories != "auto" and self.categories != "frequency":
             if len(self.categories) != n_features:
                 raise ValueError(
                     "Shape mismatch: if categories is an array,"
@@ -1448,7 +1448,7 @@ class OrdinalEncoder(OneToOneFeatureMixin, _BaseEncoder):
     """
 
     _parameter_constraints: dict = {
-        "categories": [StrOptions({"auto"}),StrOptions({"frequency"}), list],
+        "categories": [StrOptions({"auto"}), StrOptions({"frequency"}), list],
         "dtype": "no_validation",  # validation delegated to numpy
         "encoded_missing_value": [Integral, type(np.nan)],
         "handle_unknown": [StrOptions({"error", "use_encoded_value"})],

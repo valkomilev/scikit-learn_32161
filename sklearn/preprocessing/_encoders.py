@@ -104,6 +104,7 @@ class _BaseEncoder(TransformerMixin, BaseEstimator):
 
             if self.categories == "auto":
                 result = _unique(Xi, return_counts=compute_counts)
+
                 if compute_counts:
                     cats, counts = result
                     category_counts.append(counts)
@@ -115,7 +116,8 @@ class _BaseEncoder(TransformerMixin, BaseEstimator):
                         X_list_counter[element] = []
                     X_list_counter[element].append(element)
                 category_counts.append(len(X_list_counter.keys()))
-
+                result = _unique(Xi, return_counts=compute_counts)
+                cats = result
             else:
                 if np.issubdtype(Xi.dtype, np.str_):
                     # Always convert string categories to objects to avoid
@@ -175,7 +177,7 @@ class _BaseEncoder(TransformerMixin, BaseEstimator):
                 if compute_counts:
                     category_counts.append(_get_counts(Xi, cats))
 
-                self.categories_.append(cats)
+            self.categories_.append(cats)
         
         output = {"n_samples": n_samples}
         if return_counts:
@@ -188,7 +190,6 @@ class _BaseEncoder(TransformerMixin, BaseEstimator):
                     # `nan` values can only be placed in the latest position
                     missing_indices[feature_idx] = categories_for_idx.size - 1
             output["missing_indices"] = missing_indices
-
         if self._infrequent_enabled:
             self._fit_infrequent_category_mapping(
                 n_samples,

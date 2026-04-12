@@ -770,8 +770,8 @@ def test_ordinal_encoder_inverse():
 #after this this encoding is fed to the fit functions
 #we have to test if the fit is behaiving normally with the new encoding which will be ordered. 
 def test_ordinal_encoder_frequency():
+    
     enc = OrdinalEncoder(handle_unknown="use_encoded_value", unknown_value=-2)
-
     X_fit = np.array([["a", "x"], ["b", "y"], ["c", "z"]], dtype=object)
     X_trans = np.array([["c", "xy"], ["bla", "y"], ["a", "x"]], dtype=object)
     enc.fit(X_fit)

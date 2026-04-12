@@ -98,7 +98,7 @@ class _BaseEncoder(TransformerMixin, BaseEstimator):
         self.categories_ = []
         category_counts = []
         compute_counts = return_counts or self._infrequent_enabled
-        X_list_dict = {}
+        X_list_counter = {}
         for i in range(n_features):
             Xi = X_list[i]
 
@@ -111,10 +111,10 @@ class _BaseEncoder(TransformerMixin, BaseEstimator):
                     cats = result
             elif self.categories == "frequency":
                 for element in Xi:
-                    if hash(element) not in list(X_list_dict.keys()):
-                        X_list_dict[hash(element)] = []
-                    X_list_dict[hash(element)].append(element)
-                category_counts.append(len(X_list_dict.keys()))
+                    if element not in list(X_list_counter.keys()):
+                        X_list_counter[element] = []
+                    X_list_counter[element].append(element)
+                category_counts.append(len(X_list_counter.keys()))
 
             else:
                 if np.issubdtype(Xi.dtype, np.str_):
